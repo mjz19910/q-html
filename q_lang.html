@@ -19,6 +19,12 @@
 		let log_elem = document.createElement('div');
 		let log_strs = [];
 		document.body.append(log_elem);
+		function logReducer(v,n){
+			if(n===''){
+				return v+'';
+			}
+			return v+','+n;
+		}
 		console.log = function (...a) {
 			o_log.call(this, ...a);
 			let log_out = a.reduce((e, q) => e + ',' + q, '');
@@ -26,7 +32,7 @@
 			if (window.cint == void 0) {
 				window.cint = setTimeout(() => {
 					m_item_element = document.createElement('div');
-					m_item_element.innerText = log_strs.reduce((e, q) => e + '\n' + q, '');
+					m_item_element.innerText = log_strs.reduce(logReducer, '');
 					log_elem.append(m_item_element);
 					log_strs = [];
 					delete window.cint;
