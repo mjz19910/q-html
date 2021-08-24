@@ -13,7 +13,7 @@
 			return Object.create(null);
 		}
 		q = Object.create(null);
-		let out_log = [];
+		//let out_log = [];
 		let o_log = console.log;
 		let con = console;
 		let log_elem = document.createElement('div');
@@ -21,12 +21,10 @@
 		document.body.append(log_elem);
 		console.log = function (...a) {
 			o_log.call(this, ...a);
-			out_log.push(a);
-			let log_out = v.reduce((e, q) => e + ',' + q, '');
+			let log_out = a.reduce((e, q) => e + ',' + q, '');
 			log_strs.push(log_out);
 			if (window.cint == void 0) {
 				window.cint = setTimeout(() => {
-					let v = out_log.pop();
 					m_item_element = document.createElement('div');
 					m_item_element.innerText = log_strs.reduce((e, q) => e + '\n' + q, '');
 					log_elem.append(m_item_element);
@@ -41,4 +39,5 @@
 		let ast = new Ast(token_stream);
 		q.interp.run_ast(ast);
 	</script>
+	<a href=index.html></a>
 </body>
