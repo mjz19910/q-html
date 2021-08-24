@@ -1,6 +1,6 @@
 class Ast {
-    constructor(ast) {
-        this.stream = ast;
+    constructor(tok_stream) {
+        this.stream = tok_stream;
     }
     get_stream() {
         return this.stream;
