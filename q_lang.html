@@ -26,6 +26,11 @@
 			return acc+'\n'+val;
 		}
 		function logReducer(acc,val){
+			if(typeof val=='object'){
+				try{
+					val = JSON.stringify(val);
+				}catch{}
+			}
 			if(acc===''){
 				return acc+val;
 			}
