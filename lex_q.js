@@ -52,7 +52,7 @@ function lex(m_str) {
 			acc_str += '0x';
 			let ci = index + 2;
 			let cc = m_str[ci];
-			for (; cc!==void 0&&cc.match(/[a-fA-F0-9]/); ci++) {
+			for (; ci<m_str.length&&cc.match(/[a-fA-F0-9]/); ci++) {
 				cc = m_str[ci];
 				acc_str += cc;
 			}
