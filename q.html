@@ -1,4 +1,10 @@
 <script>
+  function blank(src){
+    if(typeof src=='object'&&src!==null){
+      return Object.assign(Object.create(null),src);
+    }
+    return Object.create(null);
+  }
   q=Object.create(null);
   let out_log=[];
   let o_log=console.log;
@@ -15,18 +21,92 @@
       })
     }
   }
+  function parseHex (str, start, end) {
+    var r = 0;
+
+    var len = Math.min(str.length, end);
+    for (var i = start; i < len; i++) {
+      var c = str.charCodeAt(i) - 48;
+
+      r <<= 4;
+
+      if (c >= 49 && c <= 54) {
+        r |= c - 49 + 0xa;
+      } else if (c >= 17 && c <= 22) {
+        r |= c - 17 + 0xa;
+      } else {
+        r |= c & 0xf;
+      }
+    }
+    
+    return r;
+  }
+  q.global=blank({parseHex:parseHex});
   q.run=function(ast){
     if(ast.tree.length==0)return;
     console.log(ast.tree[0])
   }
-  function lex(str){
+  class Token{
+  }
+  class SyntaxToken extends Token{
+    constructor(v){
+      super();
+      console.log(v);
+      this.v=v;
+    }
+  }
+  class OpToken extends Token{
+    constructor(v){
+      super();
+      console.log(v);
+      this.v=v;
+    }
+  }
+  class Literal extends Token{
+    set_lit_text(value){
+      this.v=value;
+    }
+  }
+  class LParaToken extends SyntaxToken{};
+  class RParaToken{};
+  class AddToken extends OpToken{};
+  class HexLiteral extends Literal{};
+  function panic(str){
+    throw Error(str);
+  }
+  function lex(m_str){
     let index=0;
-    let c=str[index];
+    let lex_tok_arr=[];
+    let c=m_str[index];
+    const Add=ops.add;
     switch(c){
       case '()'[0]:{
+        lex_tok_arr.push(new LPara(c));
         break;
       }
       case '()'[1]:{
+        lex_tok_arr.push(new RPara(c));
+        break;
+      }
+      case '+':{
+        lex_tok_arr.push(new AddToken(c));
+        break;
+      }
+      case '0':{
+        let lit=new HexLiteral;
+        if (m_str[index+1]!='x'){
+          panic('lex error');
+        }
+        let acc_str='';
+        acc_str+='0x';
+        let ci=index+2;
+        let cc=m_str[ci];
+        for(;cc.match(/[a-fA-F0-9]/);ci++){
+          cc=m_str[ci];
+          acc_str+=cc;
+        }
+        lit.set_lit_text(acc_str);
+        lex_tok_arr.push(lit);
         break;
       }
       default:
@@ -40,5 +120,5 @@
       ast.tree=ast;
     }
   };
-  q.run(new Ast(lex('a()')));
+  q.run(new Ast(lex('0x5c')));
 </script>
