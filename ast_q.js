@@ -1,6 +1,6 @@
 class Ast {
     constructor(ast) {
-        ast.stream = ast;
+        this.stream = ast;
     }
     get_stream() {
         return this.stream;
