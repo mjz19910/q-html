@@ -1,40 +1,44 @@
-<script src="lib.js"></script>
-<script src="lex_q.js"></script>
-<script src="ast_q.js"></script>
-<script src="interp_q.js"></script>
-<script>
-	function blank(src) {
-		if (typeof src == 'object' && src !== null) {
-			return Object.assign(Object.create(null), src);
+<head>
+	<script src="lib.js"></script>
+	<script src="lex_q.js"></script>
+	<script src="ast_q.js"></script>
+	<script src="interp_q.js"></script>
+</head>
+<body>
+	<script>
+		function blank(src) {
+			if (typeof src == 'object' && src !== null) {
+				return Object.assign(Object.create(null), src);
+			}
+			return Object.create(null);
 		}
-		return Object.create(null);
-	}
-	q = Object.create(null);
-	let out_log = [];
-	let o_log = console.log;
-	let con = console;
-	let log_elem = document.createElement('div');
-	let log_strs = [];
-	document.body.append(log_elem);
-	console.log = function (...a) {
-		o_log.call(this, ...a);
-		out_log.push(a);
-		let log_out = v.reduce((e, q) => e + ',' + q, '');
-		log_strs.push(log_out);
-		if (window.cint == void 0) {
-			window.cint = setTimeout(() => {
-				let v = out_log.pop();
-				m_item_element = document.createElement('div');
-				m_item_element.innerText = log_strs.reduce((e, q) => e + '\n' + q, '');
-				log_elem.append(m_item_element);
-				log_strs = [];
-				delete window.cint;
-			})
+		q = Object.create(null);
+		let out_log = [];
+		let o_log = console.log;
+		let con = console;
+		let log_elem = document.createElement('div');
+		let log_strs = [];
+		document.body.append(log_elem);
+		console.log = function (...a) {
+			o_log.call(this, ...a);
+			out_log.push(a);
+			let log_out = v.reduce((e, q) => e + ',' + q, '');
+			log_strs.push(log_out);
+			if (window.cint == void 0) {
+				window.cint = setTimeout(() => {
+					let v = out_log.pop();
+					m_item_element = document.createElement('div');
+					m_item_element.innerText = log_strs.reduce((e, q) => e + '\n' + q, '');
+					log_elem.append(m_item_element);
+					log_strs = [];
+					delete window.cint;
+				})
+			}
 		}
-	}
-	q.global = blank({ parseHex: parseHex });
-	q.interp = new Interpreter;
-	let token_stream = lex('0x5c');
-	let ast = new Ast(token_stream);
-	q.interp.run_ast(ast);
-</script>
+		q.global = blank({ parseHex: parseHex });
+		q.interp = new Interpreter;
+		let token_stream = lex('0x5c');
+		let ast = new Ast(token_stream);
+		q.interp.run_ast(ast);
+	</script>
+</body>
