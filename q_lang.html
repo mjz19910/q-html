@@ -29,11 +29,6 @@
 			if(acc===''){
 				return acc+val;
 			}
-			if(typeof val=='object'){
-				try{
-					val = JSON.stringify(val);
-				}catch{}
-			}
 			return acc+','+val;
 		}
 		console.log = function (...a) {
