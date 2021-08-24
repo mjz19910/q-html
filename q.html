@@ -1,123 +1,40 @@
+<script src="lib.js"></script>
+<script src="lex_q.js"></script>
+<script src="ast_q.js"></script>
+<script src="interp_q.js"></script>
 <script>
-  function blank(src){
-    if(typeof src=='object'&&src!==null){
-      return Object.assign(Object.create(null),src);
-    }
-    return Object.create(null);
-  }
-  q=Object.create(null);
-  let out_log=[];
-  let o_log=console.log;
-  let con=console;
-  console.log=function(...a){
-    o_log.call(this,...a);
-    out_log.push(a);
-    if(window.cint==void 0){
-      window.cint=setTimeout(()=>{
-        let v=out_log.pop();
-        let ele=document.createElement('div');
-        ele.innerText=v;
-        document.body.append(ele);
-      })
-    }
-  }
-  function parseHex (str, start, end) {
-    var r = 0;
-
-    var len = Math.min(str.length, end);
-    for (var i = start; i < len; i++) {
-      var c = str.charCodeAt(i) - 48;
-
-      r <<= 4;
-
-      if (c >= 49 && c <= 54) {
-        r |= c - 49 + 0xa;
-      } else if (c >= 17 && c <= 22) {
-        r |= c - 17 + 0xa;
-      } else {
-        r |= c & 0xf;
-      }
-    }
-    
-    return r;
-  }
-  q.global=blank({parseHex:parseHex});
-  q.run=function(ast){
-    if(ast.tree.length==0)return;
-    console.log(ast.tree[0])
-  }
-  class Token{
-  }
-  class SyntaxToken extends Token{
-    constructor(v){
-      super();
-      console.log(v);
-      this.v=v;
-    }
-  }
-  class OpToken extends Token{
-    constructor(v){
-      super();
-      console.log(v);
-      this.v=v;
-    }
-  }
-  class Literal extends Token{
-    set_lit_text(value){
-      this.v=value;
-    }
-  }
-  class LParaToken extends SyntaxToken{};
-  class RParaToken{};
-  class AddToken extends OpToken{};
-  class HexLiteral extends Literal{};
-  function panic(str){
-    throw Error(str);
-  }
-  function lex(m_str){
-    let index=0;
-    let lex_tok_arr=[];
-    let c=m_str[index];
-    switch(c){
-      case '()'[0]:{
-        lex_tok_arr.push(new LPara(c));
-        break;
-      }
-      case '()'[1]:{
-        lex_tok_arr.push(new RPara(c));
-        break;
-      }
-      case '+':{
-        lex_tok_arr.push(new AddToken(c));
-        break;
-      }
-      case '0':{
-        let lit=new HexLiteral;
-        if (m_str[index+1]!='x'){
-          panic('lex error');
-        }
-        let acc_str='';
-        acc_str+='0x';
-        let ci=index+2;
-        let cc=m_str[ci];
-        for(;cc.match(/[a-fA-F0-9]/);ci++){
-          cc=m_str[ci];
-          acc_str+=cc;
-        }
-        lit.set_lit_text(acc_str);
-        lex_tok_arr.push(lit);
-        break;
-      }
-      default:
-        if(c.charCodeAt(0)>20){};
-        console.log('bad char in lex',c,c.charCodeAt(0));
-    }
-    return [];
-  }
-  class Ast{
-    constructor(ast){
-      ast.tree=ast;
-    }
-  };
-  q.run(new Ast(lex('0x5c')));
+	function blank(src) {
+		if (typeof src == 'object' && src !== null) {
+			return Object.assign(Object.create(null), src);
+		}
+		return Object.create(null);
+	}
+	q = Object.create(null);
+	let out_log = [];
+	let o_log = console.log;
+	let con = console;
+	let log_elem = document.createElement('div');
+	let log_strs = [];
+	document.body.append(log_elem);
+	console.log = function (...a) {
+		o_log.call(this, ...a);
+		out_log.push(a);
+		let log_out = v.reduce((e, q) => e + ',' + q, '');
+		log_strs.push(log_out);
+		if (window.cint == void 0) {
+			window.cint = setTimeout(() => {
+				let v = out_log.pop();
+				m_item_element = document.createElement('div');
+				m_item_element.innerText = log_strs.reduce((e, q) => e + '\n' + q, '');
+				log_elem.append(m_item_element);
+				log_strs = [];
+				delete window.cint;
+			})
+		}
+	}
+	q.global = blank({ parseHex: parseHex });
+	q.interp = new Interpreter;
+	let token_stream = lex('0x5c');
+	let ast = new Ast(token_stream);
+	q.interp.run_ast(ast);
 </script>
