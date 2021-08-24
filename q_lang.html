@@ -19,17 +19,17 @@
 		let log_elem = document.createElement('div');
 		let log_strs = [];
 		document.body.append(log_elem);
-		function logOutReducer(v,n){
-			if(n===''){
-				return v+'';
+		function logOutReducer(acc,val){
+			if(acc===''){
+				return acc+val;
 			}
-			return v+'\n'+n;
+			return acc+'\n'+val;
 		}
-		function logReducer(v,n){
+		function logReducer(acc,val){
 			if(n===''){
-				return v+'';
+				return val+'';
 			}
-			return v+','+n;
+			return acc+','+val;
 		}
 		console.log = function (...a) {
 			o_log.call(this, ...a);
