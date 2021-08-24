@@ -57,6 +57,7 @@ function lex(m_str) {
 					cc = m_str[ci];
 					acc_str += cc;
 				}
+				index=ci;
 				lit.set_lit_text(acc_str);
 				lex_tok_arr.push(lit);
 				break;
