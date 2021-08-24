@@ -1,0 +1,44 @@
+<script>
+  q=Object.create(null);
+  let out_log=[];
+  let o_log=console.log;
+  let con=console;
+  console.log=function(...a){
+    o_log.call(this,...a);
+    out_log.push(a);
+    if(window.cint==void 0){
+      window.cint=setTimeout(()=>{
+        let v=out_log.pop();
+        let ele=document.createElement('div');
+        ele.innerText=v;
+        document.body.append(ele);
+      })
+    }
+  }
+  q.run=function(ast){
+    if(ast.tree.length==0)return;
+    console.log(ast.tree[0])
+  }
+  function lex(str){
+    let index=0;
+    let c=str[index];
+    switch(c){
+      case '()'[0]:{
+        break;
+      }
+      case '()'[1]:{
+        break;
+      }
+      default:
+        if(c.charCodeAt(0)>20){};
+        console.log('bad char in lex',c,c.charCodeAt(0));
+    }
+    return [];
+  }
+  class Ast{
+    constructor(ast){
+      ast.tree=ast;
+    }
+  };
+  q.run(new Ast(lex('a()')));
+</script>
